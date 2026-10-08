@@ -39,3 +39,16 @@ export interface Program {
   totalCredits: number;
   departmentId: string;
 }
+
+export interface ProgramWithDepartment extends Program {
+  department: Department;
+}
+
+export interface Course {
+  id: string;
+  code: string;
+  title: string;
+  creditHours: number;
+  department: Department;
+  prerequisites: { prerequisite: { id: string; code: string; title: string } }[];
+}
