@@ -25,3 +25,17 @@ export interface ApiFailure {
   message: string;
   errors: { path?: string; message?: string }[];
 }
+
+export interface Department {
+  id: string;
+  name: string;
+  code: string;
+}
+
+export interface Program {
+  id: string;
+  name: string;
+  degreeLevel: string;
+  totalCredits: number;
+  departmentId: string;
+}
