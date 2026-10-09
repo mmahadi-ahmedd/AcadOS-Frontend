@@ -19,7 +19,11 @@ interface SelectFieldProps {
 
 export function SelectField({ id, value, onChange, options, placeholder, disabled }: SelectFieldProps) {
   return (
-    <Select value={value} onValueChange={onChange} disabled={disabled}>
+    <Select
+      value={value}
+      onValueChange={(selectedValue) => onChange(selectedValue ?? "")}
+      disabled={disabled}
+    >
       <SelectTrigger id={id} className="w-full">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
