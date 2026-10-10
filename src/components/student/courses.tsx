@@ -1,9 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BookOpen, CheckCircle2, Library } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DashHeading } from "@/components/shared/dash-heading";
 import { DataTable } from "@/components/shared/data-table";
@@ -13,7 +14,7 @@ import { StatCard } from "@/components/shared/stat-card";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { useUrlParams } from "@/hooks/use-url-params";
 import { errorText, getData, getPage, send } from "@/lib/fetchers";
-import type { EnrollmentRow, SectionRow } from "@/types/academic";
+import type { EnrollmentRow, SectionRow, FeeRow } from "@/types/academic";
 
 const LIMIT = 8;
 const sectionLabel = (s: SectionRow) => s.sectionName ?? s.name ?? "—";
@@ -32,6 +33,11 @@ export function StudentCourses() {
     queryFn: () => getPage<SectionRow>("/sections", { page: url.page, limit: LIMIT }),
     placeholderData: (previous) => previous,
   });
+  const fees = useQuery({
+    queryKey: ["student", "fees"],
+    queryFn: () => getData<FeeRow[]>("/fees/my-fees")
+  });
+  const owes = (fees.data ?? []).some((f) => f.status !== "PAID" && f.status !== "REFUNDED");
 
   const refresh = () => queryClient.invalidateQueries({ queryKey: ["student"] });
   const enrol = useMutation({
@@ -69,6 +75,17 @@ export function StudentCourses() {
         <StatCard label="Completed" value={enrolments.filter((e) => e.status === "COMPLETED").length} icon={CheckCircle2} />
       </div>
 
+      {owes && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-gold/60 bg-card p-4">
+          <p className="text-sm text-primary">
+            You have a fee waiting. Please pay it before enrolling in new courses.
+          </p>
+          <Link href="/student/payments" className={buttonVariants({ size: "sm" })}>
+            Pay fees
+          </Link>
+        </div>
+      )}
+
       <section className="space-y-3">
         <h2 className="text-xl font-semibold text-primary">My enrolments</h2>
         {mine.isLoading ? (
@@ -89,7 +106,7 @@ export function StudentCourses() {
                 header: "",
                 cell: (e) =>
                   e.status === "ENROLLED" && (
-                    <Button variant="outline" size="sm" disabled={drop.isPending} onClick={() => window.confirm("Drop this course?") && drop.mutate(e.id)}>
+                    <Button variant="outline" size="sm" disabled={enrol.isPending || owes} onClick={() => window.confirm("Drop this course?") && drop.mutate(e.id)}>
                       Drop
                     </Button>
                   ),

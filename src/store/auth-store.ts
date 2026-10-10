@@ -53,7 +53,7 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: state.refreshToken,
       }),
       onRehydrateStorage: () => () => {
-        useAuthStore.setState({ hydrated: true });
+        queueMicrotask(() => useAuthStore.setState({ hydrated: true }));
       },
     }
   )
