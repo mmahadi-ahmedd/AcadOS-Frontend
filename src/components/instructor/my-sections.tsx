@@ -56,7 +56,7 @@ export function MySections() {
           emptyText="Once the registrar assigns you a section it will be listed here."
           columns={[
             { header: "Course", cell: (s) => <><span className="font-medium text-primary">{s.course?.code}</span> {s.course?.title}</> },
-            { header: "Section", cell: (s) => s.sectionName ?? s.name ?? "—" },
+            { header: "Section", cell: (s) => s.sectionCode ?? s.name ?? "—" },
             { header: "Term", cell: (s) => s.semester?.name ?? "—" },
             { header: "Students", cell: (s) => `${s._count?.enrollments ?? 0}${s.capacity ? ` / ${s.capacity}` : ""}` },
             {

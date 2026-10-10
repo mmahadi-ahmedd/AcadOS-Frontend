@@ -17,7 +17,7 @@ import { errorText, getData, getPage, send } from "@/lib/fetchers";
 import type { EnrollmentRow, SectionRow, FeeRow } from "@/types/academic";
 
 const LIMIT = 8;
-const sectionLabel = (s: SectionRow) => s.sectionName ?? s.name ?? "—";
+const sectionLabel = (s: SectionRow) => s.sectionCode ?? s.name ?? "—";
 
 export function StudentCourses() {
   const url = useUrlParams();

@@ -21,7 +21,7 @@ export function InstructorAnalytics() {
 
   const rows = sections.data ?? [];
   const chart = rows.map((s) => ({
-    name: `${s.course?.code ?? "Course"}${s.sectionName ? ` ${s.sectionName}` : ""}`,
+    name: `${s.course?.code ?? "Course"}${s.sectionCode ? ` ${s.sectionCode}` : ""}`,
     value: s._count?.enrollments ?? 0,
   }));
   const students = chart.reduce((sum, c) => sum + c.value, 0);

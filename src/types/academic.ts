@@ -6,7 +6,7 @@ export interface CourseLite {
 
 export interface SectionRow {
   id: string;
-  sectionName?: string;
+  sectionCode?: string;
   name?: string;
   capacity?: number;
   course: CourseLite;
