@@ -5,6 +5,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <DashboardShell
       links={[
         { href: "/admin", label: "Overview", icon: "home" },
+        { href: "/admin/academics", label: "Academics", icon: "book" },
         { href: "/admin/manage", label: "Manage users", icon: "users" },
         { href: "/admin/fees", label: "Fees", icon: "card" },
         { href: "/admin/reports", label: "Reports", icon: "chart" },
