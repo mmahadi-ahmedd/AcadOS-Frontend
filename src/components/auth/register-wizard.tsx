@@ -31,7 +31,7 @@ import {
 } from "@/lib/validators/auth";
 import { useAuthStore } from "@/store/auth-store";
 
-// A fixed list keeps the intake dropdown stable between server and browser
+
 const INTAKE_YEARS = ["2027", "2026", "2025", "2024", "2023", "2022", "2021", "2020"].map((year) => ({
   value: year,
   label: year,
@@ -53,8 +53,6 @@ export function RegisterWizard() {
   const [role, setRole] = useState<JoiningRole>("STUDENT");
   const creatingAccount = useRef(false);
 
-  // Someone who is already signed in has no reason to be on this page,
-  // unless they are in the middle of finishing sign-up right now
   useEffect(() => {
     if (hydrated && user && !creatingAccount.current) {
       router.replace(ROLE_HOME[user.role]);
@@ -72,7 +70,6 @@ export function RegisterWizard() {
           role: values.role,
           phone: values.phone || undefined,
         });
-        // Department and programme lists need a token, so sign in right away
         const session = await loginRequest(values.email, values.password);
         startSession(session);
         return values.role;
@@ -86,7 +83,11 @@ export function RegisterWizard() {
       setStep(2);
       toast.success("Account created. One last step.");
     },
-    onError: (error) => toast.error(getErrorMessage(error, "We couldn't create your account.")),
+    onError: (error) => {
+      const message = getErrorMessage(error, "We couldn't create your account.");
+      const taken = /exist|already|registered|taken/i.test(message);
+      toast.error(taken ? `${message} If this is you, sign in and finish your details from the dashboard.` : message);
+    },
   });
 
   const saveDetails = useMutation({
@@ -207,11 +208,10 @@ function AccountStep({
               type="button"
               aria-pressed={role === option.value}
               onClick={() => setValue("role", option.value)}
-              className={`rounded-md border px-4 py-2.5 text-sm font-medium transition-colors ${
-                role === option.value
+              className={`rounded-md border px-4 py-2.5 text-sm font-medium transition-colors ${role === option.value
                   ? "border-primary bg-primary text-primary-foreground"
                   : "bg-card hover:bg-secondary"
-              }`}
+                }`}
             >
               {option.label}
             </button>
@@ -248,7 +248,7 @@ function AccountStep({
   );
 }
 
-function StudentStep({
+export function StudentStep({
   submitting,
   onSkip,
   onSubmit,
@@ -280,9 +280,6 @@ function StudentStep({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      <FormField label="Student ID" htmlFor="studentId" error={errors.studentId?.message}>
-        <Input id="studentId" {...register("studentId")} />
-      </FormField>
 
       <FormField label="Department" htmlFor="departmentId" error={errors.departmentId?.message}>
         <Controller
@@ -341,7 +338,7 @@ function StudentStep({
   );
 }
 
-function FacultyStep({
+export function FacultyStep({
   submitting,
   onSkip,
   onSubmit,
@@ -364,9 +361,7 @@ function FacultyStep({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-      <FormField label="Employee ID" htmlFor="employeeId" error={errors.employeeId?.message}>
-        <Input id="employeeId" {...register("employeeId")} />
-      </FormField>
+
 
       <FormField label="Department" htmlFor="faculty-department" error={errors.departmentId?.message}>
         <Controller

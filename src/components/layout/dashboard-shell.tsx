@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import { ProfilePrompt } from "@/components/profile/profile-prompt";
 import {
   BarChart3, BookOpen, ClipboardList, CreditCard, GraduationCap,
   LayoutDashboard, LogOut, Menu, UserCircle, Users, X,
@@ -86,7 +87,10 @@ export function DashboardShell({ links, children }: { links: NavItem[]; children
           </p>
           <p className="text-sm font-medium text-primary">{user?.name}</p>
         </header>
-        <main className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6">{children}</main>
+        <main className="mx-auto max-w-6xl space-y-6 p-4 sm:p-6">
+          <ProfilePrompt />
+          {children}
+        </main>
       </div>
 
       {open && (

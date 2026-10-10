@@ -28,7 +28,7 @@ export const accountSchema = z
 export type AccountValues = z.infer<typeof accountSchema>;
 
 export const studentDetailsSchema = z.object({
-  studentId: z.string().trim().min(3, "Enter your student ID"),
+  studentId: z.string().optional(),
   departmentId: z.string().min(1, "Choose your department"),
   programId: z.string().min(1, "Choose your programme"),
   enrollYear: z.string().min(1, "Choose your intake year"),
@@ -36,7 +36,7 @@ export const studentDetailsSchema = z.object({
 export type StudentDetailsValues = z.infer<typeof studentDetailsSchema>;
 
 export const facultyDetailsSchema = z.object({
-  employeeId: z.string().trim().min(3, "Enter your employee ID"),
+  employeeId: z.string().optional(),
   departmentId: z.string().min(1, "Choose your department"),
   designation: z.string().trim().optional(),
 });
