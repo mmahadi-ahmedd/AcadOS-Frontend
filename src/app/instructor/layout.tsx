@@ -5,6 +5,7 @@ export default function InstructorLayout({ children }: { children: React.ReactNo
     <DashboardShell
       links={[
         { href: "/instructor", label: "My sections", icon: "list" },
+        { href: "/instructor/exams", label: "Exams & marks", icon: "book" },
         { href: "/instructor/analytics", label: "Results", icon: "chart" },
         { href: "/instructor/profile", label: "Profile", icon: "user" },
       ]}
